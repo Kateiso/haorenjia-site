@@ -57,5 +57,5 @@ Disallow: /
 # Disallow: /admin/
 # Disallow: /drafts/
 
-Sitemap: https://kateiso.github.io/haorenjia-site/sitemap.txt
+Sitemap: https://www.topxiangcai.top/sitemap.txt
 
