@@ -1,0 +1,15 @@
+User-agent: Baiduspider
+Allow: /
+
+# OpenAI: allow answer referencing, block training
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: GPTBot
+Disallow: /
+
+# Perplexity: allow public index bot
+User-agent: PerplexityBot
+Allow: /
+# Note: Perplexity-User may ignore robots; control via WAF/IP if needed.
