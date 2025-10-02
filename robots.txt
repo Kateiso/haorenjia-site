@@ -1,15 +1,58 @@
+# —— 默认：全站允许 —— 
+User-agent: *
+Allow: /
+
+# —— 国内搜索与AI相关常见UA（显式允许，便于你后续精细化管控）——
+# 百度
 User-agent: Baiduspider
 Allow: /
 
-# OpenAI: allow answer referencing, block training
+# 字节系（头条/抖音搜索）
+# 官方UA常用 Bytespider（也存在少量 ToutiaoSpider 形态）
+User-agent: Bytespider
+Allow: /
+User-agent: ToutiaoSpider
+Allow: /
+
+# 阿里系（神马搜索）
+User-agent: YisouSpider
+Allow: /
+
+# 360 搜索
+User-agent: 360Spider
+Allow: /
+
+# 搜狗（包含Web/移动/微信相关抓取入口，现存量仍可见）
+User-agent: Sogou web spider
+Allow: /
+User-agent: Sogou inst spider
+Allow: /
+User-agent: Sogou Pic Spider
+Allow: /
+
+# 华为 Petal 搜索
+User-agent: PetalBot
+Allow: /
+
+# —— OpenAI/Perplexity：允许“回答时引用”，训练可选 —— 
+# 允许 ChatGPT 搜索/回答时抓取与展示引用
 User-agent: OAI-SearchBot
 Allow: /
 User-agent: ChatGPT-User
 Allow: /
+
+# 如不希望被模型训练，请禁用 GPTBot（训练用）
 User-agent: GPTBot
 Disallow: /
 
-# Perplexity: allow public index bot
+# 允许 Perplexity 的公开索引爬虫展示引用
 User-agent: PerplexityBot
 Allow: /
-# Note: Perplexity-User may ignore robots; control via WAF/IP if needed.
+# 注意：Perplexity-User（用户触发抓取）有时可能不严格遵守 robots，
+# 若需严格限制，请配合WAF/IP白黑名单在服务器层面控制
+User-agent: Perplexity-User
+Disallow: /
+
+# —— 可选：屏蔽敏感目录（若以后有管理后台/临时文件）——
+# Disallow: /admin/
+# Disallow: /drafts/
