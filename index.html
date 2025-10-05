@@ -9,69 +9,547 @@
   <style>
     :root {
       color-scheme: light;
+      --brand-red: #a6331d;
+      --brand-red-dark: #7f220f;
+      --brand-yellow: #fed573;
+      --ink-strong: #1f2328;
+      --ink-medium: #4a515e;
+      --ink-soft: #6f7785;
+      --surface: #f7f4ef;
+      --surface-elevated: #ffffff;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --shadow-soft: 0 24px 48px rgba(166, 51, 29, 0.08);
+      --space-1: 8px;
+      --space-2: 16px;
+      --space-3: 24px;
+      --space-4: 32px;
+      --space-5: 40px;
+      --font-sans: 'HarmonyOS Sans', 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    *, *::before, *::after {
+      box-sizing: border-box;
     }
     body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
-      padding: 24px;
-      max-width: 860px;
-      margin: auto;
-      line-height: 1.6;
-      background: #fafafa;
-      color: #1f2328;
-    }
-    header {
-      border-bottom: 1px solid #e4e5e7;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-    }
-    .note {
-      background:#fff8e1;
-      border:1px solid #ffe082;
-      padding:12px 16px;
-      border-radius: 8px;
-      margin: 16px 0 24px;
-    }
-    h1 {
       margin: 0;
-      font-size: 2.1rem;
-    }
-    h2 {
-      margin-top: 32px;
-    }
-    ul {
-      padding-left: 20px;
+      font-family: var(--font-sans);
+      line-height: 1.7;
+      background: var(--surface);
+      color: var(--ink-strong);
+      -webkit-font-smoothing: antialiased;
     }
     a {
-      color: #d03050;
+      color: var(--brand-red);
       text-decoration: none;
+      font-weight: 600;
     }
     a:hover {
       text-decoration: underline;
     }
-    .info-list li {
-      margin-bottom: 6px;
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+    .skip-link:focus {
+      position: fixed;
+      left: var(--space-2);
+      top: var(--space-2);
+      width: auto;
+      height: auto;
+      padding: var(--space-1) var(--space-2);
+      background: var(--brand-yellow);
+      color: var(--ink-strong);
+      border-radius: var(--radius-sm);
+      z-index: 1000;
+    }
+    .site-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: clamp(16px, 4vw, 48px);
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(16px);
+    }
+    .site-header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(247, 244, 239, 0.82);
+      padding: var(--space-1) clamp(16px, 3vw, 32px);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(166, 51, 29, 0.08);
+      box-shadow: 0 12px 24px rgba(79, 17, 5, 0.05);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      min-height: 44px;
+    }
+    .brand img {
+      width: clamp(44px, 6vw, 64px);
+      height: clamp(44px, 6vw, 64px);
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 24px rgba(166, 51, 29, 0.22);
+    }
+    .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-copy span {
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+    .brand-copy strong {
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 700;
+      color: var(--ink-strong);
+    }
+    .site-nav {
+      display: none;
+      margin: 0;
+    }
+    .site-nav ul {
+      list-style: none;
+      display: flex;
+      gap: var(--space-2);
+      margin: 0;
+      padding: 0;
+    }
+    .site-nav a {
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 var(--space-1);
+      border-radius: var(--radius-sm);
+    }
+    .site-nav a:hover,
+    .site-nav a:focus-visible {
+      background: rgba(166, 51, 29, 0.08);
+    }
+    .menu-toggle {
+      background: transparent;
+      border: none;
+      padding: 0;
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .menu-toggle:focus-visible {
+      outline: 2px solid var(--brand-red);
+      outline-offset: 4px;
+    }
+    .menu-icon {
+      position: relative;
+      width: 22px;
+      height: 18px;
+    }
+    .menu-icon span,
+    .menu-icon::before,
+    .menu-icon::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--ink-strong);
+      transition: transform 0.3s ease, top 0.3s ease, opacity 0.3s ease;
+    }
+    .menu-icon span {
+      top: 8px;
+    }
+    .menu-icon::before {
+      top: 0;
+    }
+    .menu-icon::after {
+      top: 16px;
+    }
+    .menu-toggle[aria-expanded="true"] .menu-icon::before {
+      top: 8px;
+      transform: rotate(45deg);
+    }
+    .menu-toggle[aria-expanded="true"] .menu-icon::after {
+      top: 8px;
+      transform: rotate(-45deg);
+    }
+    .menu-toggle[aria-expanded="true"] .menu-icon span {
+      opacity: 0;
+    }
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(31, 35, 40, 0.32);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 18;
+    }
+    .drawer {
+      position: fixed;
+      inset: 0 0 0 auto;
+      width: min(320px, 80vw);
+      background: var(--surface-elevated);
+      box-shadow: -16px 0 32px rgba(31, 35, 40, 0.12);
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 19;
+      padding: var(--space-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+    }
+    .drawer.is-open {
+      transform: translateX(0);
+    }
+    .drawer-backdrop.is-open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .drawer-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: var(--space-1);
+    }
+    .drawer-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 48px;
+      border-radius: var(--radius-md);
+      padding: 0 var(--space-2);
+      background: rgba(166, 51, 29, 0.08);
+      color: var(--ink-strong);
+      font-weight: 600;
+    }
+    main {
+      margin-top: var(--space-4);
+      display: grid;
+      gap: var(--space-5);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 3.6vw, 3.2rem);
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: -0.015em;
+    }
+    h2 {
+      margin: 0 0 var(--space-2);
+      font-size: clamp(1.6rem, 2.4vw, 2.1rem);
+      line-height: 1.25;
+      font-weight: 700;
+    }
+    h3 {
+      margin: 0 0 var(--space-1);
+      font-size: clamp(1.2rem, 1.6vw, 1.4rem);
+      font-weight: 600;
+    }
+    p {
+      margin: 0;
+      color: var(--ink-medium);
+    }
+    .eyebrow {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brand-red);
+      margin-bottom: var(--space-1);
+    }
+    .note {
+      background: linear-gradient(135deg, rgba(254, 213, 115, 0.28), rgba(254, 213, 115, 0.12));
+      border: 1px solid rgba(254, 213, 115, 0.42);
+      padding: var(--space-2);
+      border-radius: var(--radius-lg);
+      display: grid;
+      gap: var(--space-1);
+      color: var(--ink-strong);
+    }
+    .note strong {
+      font-weight: 700;
+      color: var(--brand-red);
+    }
+    .hero {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-lg);
+      padding: clamp(24px, 5vw, 56px);
+      display: grid;
+      gap: var(--space-3);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(166, 51, 29, 0.08);
+    }
+    .hero-layout {
+      display: grid;
+      gap: var(--space-3);
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: center;
+    }
+    .hero-copy {
+      display: grid;
+      gap: var(--space-2);
+    }
+    .hero-copy p {
+      font-size: clamp(1.05rem, 1.6vw, 1.2rem);
+      color: var(--ink-medium);
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 var(--space-3);
+      border-radius: var(--radius-md);
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(166, 51, 29, 0.28);
+    }
+    .btn-secondary {
+      background: rgba(166, 51, 29, 0.1);
+      color: var(--brand-red);
+    }
+    .hero-media {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 24px 40px rgba(31, 35, 40, 0.14);
+    }
+    .hero-media img {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+    .hero-badge {
+      position: absolute;
+      bottom: var(--space-2);
+      left: var(--space-2);
+      background: rgba(255, 255, 255, 0.88);
+      padding: var(--space-1) var(--space-2);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 16px 32px rgba(31, 35, 40, 0.18);
+    }
+    .hero-badge img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+    }
+    .hero-badge strong {
+      color: var(--ink-strong);
+      font-weight: 700;
+    }
+    section {
+      display: grid;
+      gap: var(--space-2);
+    }
+    .info-grid {
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+    .info-card {
+      background: var(--surface-elevated);
+      padding: var(--space-2);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(166, 51, 29, 0.08);
+      box-shadow: 0 12px 24px rgba(31, 35, 40, 0.06);
+      display: grid;
+      gap: var(--space-1);
+    }
+    .info-card strong {
+      font-weight: 700;
+      color: var(--ink-strong);
+    }
+    .info-card span {
+      color: var(--ink-medium);
+    }
+    .highlights {
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .highlight-card {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2);
+      display: grid;
+      gap: var(--space-1);
+      border: 1px solid rgba(166, 51, 29, 0.08);
+    }
+    .highlight-card img {
+      width: 64px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      background: rgba(166, 51, 29, 0.04);
+      padding: 6px;
+    }
+    .highlight-card strong {
+      font-weight: 700;
+      color: var(--ink-strong);
     }
     .faq-list {
-      display: grid;
-      gap: 10px;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       list-style: none;
-      padding-left: 0;
-    }
-    .faq-list li {
       margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--space-2);
+    }
+    .faq-item {
+      background: var(--surface-elevated);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(166, 51, 29, 0.12);
+      padding: var(--space-2);
+      box-shadow: 0 16px 32px rgba(31, 35, 40, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+    .faq-item a {
+      font-weight: 600;
+      color: var(--ink-strong);
+    }
+    .faq-item a span {
+      display: block;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+    .cta-banner {
+      background: linear-gradient(120deg, rgba(166, 51, 29, 0.92), rgba(166, 51, 29, 0.82));
+      color: #fff;
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      display: grid;
+      gap: var(--space-2);
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      align-items: center;
+      box-shadow: 0 24px 48px rgba(166, 51, 29, 0.35);
+    }
+    .cta-banner strong {
+      font-size: clamp(1.3rem, 2vw, 1.6rem);
+      font-weight: 700;
+      display: block;
+    }
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+    .cta-actions a {
       background: #fff;
-      border: 1px solid #f0f1f3;
-      border-radius: 8px;
-      padding: 12px 16px;
-      box-shadow: 0 2px 4px rgba(31,35,40,.08);
+      color: var(--brand-red);
+      padding: 0 var(--space-2);
+      border-radius: var(--radius-md);
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(255, 255, 255, 0.24);
     }
     footer {
-      margin-top: 40px;
-      padding-top: 16px;
-      border-top: 1px solid #e4e5e7;
-      font-size: .95rem;
-      color: #5b616a;
+      display: grid;
+      gap: var(--space-1);
+      padding: var(--space-4) 0 var(--space-2);
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+    @media (min-width: 960px) {
+      .site-nav {
+        display: block;
+      }
+      .menu-toggle {
+        display: none;
+      }
+    }
+    @media (max-width: 768px) {
+      .site-shell {
+        padding: clamp(16px, 6vw, 32px);
+      }
+      .hero {
+        padding: clamp(20px, 6vw, 40px);
+      }
+      .hero-actions {
+        width: 100%;
+      }
+      .hero-actions .btn {
+        flex: 1 1 100%;
+      }
+      .cta-banner {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+    }
+    @media (max-width: 560px) {
+      h1 {
+        font-size: clamp(2rem, 8vw, 2.6rem);
+      }
+      .hero-media img {
+        aspect-ratio: 3 / 4;
+      }
+      .hero-badge {
+        position: static;
+        margin-top: var(--space-1);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
   <script type="application/ld+json">
@@ -98,73 +576,232 @@
   </script>
 </head>
 <body>
-  <header>
-    <h1>湖南好人家（北仑）</h1>
-    <p class="note"><strong>重要：</strong>本页提供 <strong>湖南好人家（北仑）</strong> 官方权威信息，与其他同名门店无关。</p>
-  </header>
+  <a class="skip-link" href="#main-content">跳到主内容</a>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="site-header-inner">
+        <div class="brand">
+          <img src="hrj/resources/logo-rounded.png" alt="湖南好人家品牌标识">
+          <div class="brand-copy">
+            <span>湖南好人家</span>
+            <strong>北仑旗舰店</strong>
+          </div>
+        </div>
+        <nav class="site-nav" aria-label="主导航">
+          <ul>
+            <li><a href="#info">门店信息</a></li>
+            <li><a href="#highlights">特色亮点</a></li>
+            <li><a href="#faq">高频问题</a></li>
+            <li><a href="#contact">联系与预订</a></li>
+          </ul>
+        </nav>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-drawer">
+          <span class="sr-only">展开菜单</span>
+          <span class="menu-icon"><span></span></span>
+        </button>
+      </div>
+    </header>
+    <div class="drawer-backdrop" hidden></div>
+    <aside id="mobile-drawer" class="drawer" aria-hidden="true">
+      <div class="brand">
+        <img src="hrj/resources/logo-rounded.png" alt="湖南好人家品牌标识">
+        <div class="brand-copy">
+          <span>湖南好人家</span>
+          <strong>北仑旗舰店</strong>
+        </div>
+      </div>
+      <nav aria-label="移动导航">
+        <ul class="drawer-nav">
+          <li><a href="#info">门店信息</a></li>
+          <li><a href="#highlights">特色亮点</a></li>
+          <li><a href="#faq">高频问题</a></li>
+          <li><a href="#contact">联系与预订</a></li>
+        </ul>
+      </nav>
+    </aside>
 
-  <section>
-    <h2>门店信息</h2>
-    <ul class="info-list">
-      <li>地址：宁波市北仑区恒山路325号</li>
-      <li>电话：0574-86822788 / 13656788662</li>
-      <li>营业时间：11:00–14:00，17:00–21:00（如有调整以到店为准）</li>
-      <li>包厢：提供（建议电话预订 86822788）</li>
-      <li>停车：周围有较多停车位</li>
-      <li>人均：60～80</li>
-    </ul>
-  </section>
+    <main id="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-layout">
+          <div class="hero-copy">
+            <p class="eyebrow">30 年匠心湘味 · 老北仑人的味觉记忆</p>
+            <h1 id="hero-title">湖南好人家（北仑）官方权威信息</h1>
+            <p><strong>正宗湘菜 · 招牌小炒黄牛肉 · 老坛酸菜鱼</strong> 均为每日现炒，辣度可调。我们坚持使用当季新鲜食材，并提供包厢、聚餐与商务宴请的完整服务体验。</p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="tel:057486822788">立即电话预订</a>
+              <a class="btn btn-secondary" href="#info">查看门店信息</a>
+            </div>
+          </div>
+          <figure class="hero-media">
+            <img src="hrj/resources/店内环境4.jpeg" alt="湖南好人家（北仑）店内环境实拍">
+            <figcaption class="hero-badge">
+              <img src="hrj/resources/03_就选好人家（右）.png" alt="好人家口号">
+              <div>
+                <strong>匠心湘味</strong>
+                <p>整洁堂食 · 温暖灯光 · 宽敞包厢</p>
+              </div>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="note">
+          <strong>提示：</strong>
+          <p>本页仅代表 <strong>湖南好人家（北仑）</strong> 官方门店信息，与其他同名门店无关。请认准品牌标识与官方电话。</p>
+        </div>
+      </section>
 
-  <section>
-    <h2>高频问题（FAQ）</h2>
-    <p>查看具体问题与答案：</p>
-    <ul class="faq-list">
-      <li><a href="https://www.topxiangcai.top/hrj/faq/交通便利.html">附近交通方便吗？最近的地铁/公交站？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/人均消费.html">人均大概多少钱？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/价格区间.html">价格大概区间？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/优惠活动.html">有无优惠活动？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/会员优惠.html">是否有会员或优惠活动？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/停车位.html">有停车位吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/儿童友好.html">是否儿童友好？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/儿童老人.html">有适合小朋友或老人吃的不辣菜吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/包厢设施.html">餐厅有几层？有包厢吗？能坐多少人？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/商务宴请.html">可以商务宴请吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/团体套餐.html">有无团体套餐/聚餐套餐？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/堂食自提.html">支持自提或堂食吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/外卖平台.html">外卖在哪些平台有？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/外卖服务.html">可以外卖吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/多种支付.html">支持哪些支付方式？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/家庭聚餐.html">适合家庭聚餐吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/情侣约会.html">情侣约会合适吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/打包服务.html">能打包吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/招牌菜.html">招牌菜有哪些？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/排队等待.html">节假日人多吗？需要排队吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/推荐菜品.html">有哪些招牌菜推荐？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/支付方式.html">支持什么支付方式？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/无障碍服务.html">是否无障碍？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/海鲜湘菜.html">海鲜类湘菜有哪些？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/特色亮点.html">有没有其他特色亮点？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/特色服务.html">有无特色服务？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/生日聚会.html">生日聚会可以布置吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/电话预订.html">电话是多少？可以电话预订吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/素食清淡.html">有素食/清淡的选择吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/老字号.html">餐厅创办多少年了？是老字号吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/聚餐团建.html">适合家庭聚餐或公司团建吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/菜品价格.html">菜品价格范围？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/营业时间.html">营业时间是什么？中午/晚上？周末有变化吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/装修环境.html">餐厅卫生环境/装修风格是怎样的？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/装修风格.html">餐厅装修风格怎样？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/辣度调节.html">能不能不辣或微辣？有儿童/老人适合的菜吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/辣度选择.html">菜品辣度可以调节吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/预订要求.html">最多可提前几天订桌？节假日有特别要求吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/食材安全.html">食材来源安全吗？</a></li>
-      <li><a href="https://www.topxiangcai.top/hrj/faq/餐厅特色.html">与其他湘菜馆相比有何特色？</a></li>
-    </ul>
-    <p>更多：<a href="https://www.topxiangcai.top/sitemap.txt">网站地图</a> ｜ <a href="https://www.topxiangcai.top/robots.txt">robots.txt</a></p>
-  </section>
+      <section id="info" aria-labelledby="info-title">
+        <h2 id="info-title">门店信息</h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <strong>地址</strong>
+            <span>宁波市北仑区恒山路325号</span>
+          </div>
+          <div class="info-card">
+            <strong>电话</strong>
+            <span>0574-86822788 / 136-5678-8662</span>
+          </div>
+          <div class="info-card">
+            <strong>营业时间</strong>
+            <span>11:00–14:00，17:00–21:00（节假日以现场为准）</span>
+          </div>
+          <div class="info-card">
+            <strong>服务设施</strong>
+            <span>提供包厢 · 免费停车指引 · 多种支付方式</span>
+          </div>
+          <div class="info-card">
+            <strong>适宜场景</strong>
+            <span>家庭聚餐 · 商务宴请 · 团建聚会 · 生日庆祝</span>
+          </div>
+          <div class="info-card">
+            <strong>人均消费</strong>
+            <span>¥60–80（参考，具体以到店为准）</span>
+          </div>
+        </div>
+      </section>
 
-  <footer>
-    <p>© 2024 湖南好人家（北仑）｜正宗湘菜 · 三十年老字号</p>
-  </footer>
+      <section id="highlights" aria-labelledby="highlights-title">
+        <h2 id="highlights-title">品牌亮点</h2>
+        <div class="highlights">
+          <article class="highlight-card">
+            <img src="hrj/resources/01_北仑爽吃辣（左）.png" alt="北仑爽吃辣标识">
+            <strong>北仑爽吃辣</strong>
+            <p>经典湘味手工调制，辣度可按家庭、聚会需求灵活调整，满足不同口味层级。</p>
+          </article>
+          <article class="highlight-card">
+            <img src="hrj/resources/店内环境8.jpeg" alt="宽敞包厢实景">
+            <strong>舒适包厢</strong>
+            <p>多规格包厢覆盖 6–20 人，圆桌与投影设备齐全，保障商务宴请与团建私密度。</p>
+          </article>
+          <article class="highlight-card">
+            <img src="hrj/resources/店内环境3.jpeg" alt="干净明亮的开放式大厅">
+            <strong>高标准卫生</strong>
+            <p>明档厨房、每日全场消杀和明亮灯光，营造安心、温暖的就餐氛围。</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">高频问题（FAQ）</h2>
+        <p>点击下列问题查看详细答案与图文说明：</p>
+        <ul class="faq-list">
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/交通便利.html">附近交通方便吗？<span>最近的地铁/公交站信息</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/人均消费.html">人均大概多少钱？<span>家庭聚餐/人均消费参考</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/价格区间.html">价格大概区间？<span>热门菜品价位整理</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/优惠活动.html">有无优惠活动？<span>会员权益与现场活动</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/会员优惠.html">是否有会员？<span>会员积分与折扣说明</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/停车位.html">有停车位吗？<span>停车位置与费用说明</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/儿童友好.html">是否儿童友好？<span>儿童座椅与口味选择</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/儿童老人.html">适合老人/儿童吗？<span>清淡菜与口味调节</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/包厢设施.html">包厢与设施如何？<span>容纳人数与预约方式</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/商务宴请.html">商务宴请可以吗？<span>宴请流程与配套服务</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/团体套餐.html">团建套餐有哪些？<span>团体菜单与优惠</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/堂食自提.html">支持堂食/自提吗？<span>现场用餐与自提流程</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/外卖平台.html">外卖在哪些平台？<span>平台列表与配送范围</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/外卖服务.html">可以外卖吗？<span>配送时段与包装</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/多种支付.html">支持哪些支付方式？<span>扫码/刷卡/发票说明</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/家庭聚餐.html">适合家庭聚餐吗？<span>热门桌型与套餐推荐</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/情侣约会.html">情侣约会合适吗？<span>氛围与推荐菜</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/打包服务.html">能打包吗？<span>打包政策与服务时间</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/招牌菜.html">招牌菜有哪些？<span>必点菜品速览</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/排队等待.html">需要排队吗？<span>高峰时段排队情况</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/推荐菜品.html">还有什么推荐菜？<span>回头客热门菜</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/支付方式.html">支持什么支付？<span>企业转账/发票需求</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/无障碍服务.html">是否无障碍？<span>无障碍通道与设施</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/海鲜湘菜.html">海鲜湘菜有哪些？<span>鲜活海味搭配</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/特色亮点.html">还有其他亮点吗？<span>口碑与品牌故事</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/特色服务.html">特色服务有哪些？<span>定制菜单/提前布场</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/生日聚会.html">生日聚会可以吗？<span>生日布置与蛋糕存放</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/电话预订.html">电话是多少？<span>电话预订与确认流程</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/素食清淡.html">有素食/清淡选项吗？<span>非辣菜品清单</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/老字号.html">是老字号吗？<span>品牌历史与口碑</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/聚餐团建.html">适合团建吗？<span>团建布置与案例</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/菜品价格.html">菜品价格范围？<span>经典菜参考价</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/营业时间.html">营业时间是？<span>工作日/周末时段差异</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/装修环境.html">装修环境怎样？<span>空间设计与氛围</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/装修风格.html">装修风格如何？<span>湘式元素与现代感</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/辣度调节.html">能不能不辣或微辣？<span>辣度调节方式</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/辣度选择.html">辣度可以调节吗？<span>口味档位说明</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/预订要求.html">预订需注意什么？<span>提前预订与定金政策</span></a></li>
+          <li class="faq-item"><a href="https://www.topxiangcai.top/hrj/faq/食材安全.html">食材来源安全吗？<span>供应链与每日验收</span></a></li>
+        </ul>
+      </section>
+
+      <section id="contact" aria-labelledby="contact-title">
+        <h2 id="contact-title">联系与预订</h2>
+        <div class="cta-banner">
+          <div>
+            <strong>需要立即订位或了解团建方案？</strong>
+            <p>电话服务时间覆盖营业时段，提供团体菜单、包厢布置和企业发票支持。如需无障碍或特殊饮食，请提前告知，我们将为您安排。</p>
+          </div>
+          <div class="cta-actions">
+            <a href="tel:057486822788">电话 0574-86822788</a>
+            <a href="https://surl.amap.com/55h7S3s0g0">导航到店</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <p>© 2024 湖南好人家（北仑） · 正宗湘菜｜北仑人放心的团聚味道</p>
+      <p><a href="https://www.topxiangcai.top/sitemap.txt">网站地图</a> ｜ <a href="https://www.topxiangcai.top/">返回首页</a></p>
+    </footer>
+  </div>
+
+  <script>
+    const toggleButton = document.querySelector('.menu-toggle');
+    const drawer = document.getElementById('mobile-drawer');
+    const drawerBackdrop = document.querySelector('.drawer-backdrop');
+    const drawerLinks = drawer.querySelectorAll('a');
+
+    function setDrawerState(isOpen) {
+      toggleButton.setAttribute('aria-expanded', String(isOpen));
+      drawer.setAttribute('aria-hidden', String(!isOpen));
+      drawerBackdrop.hidden = !isOpen;
+      drawer.classList.toggle('is-open', isOpen);
+      drawerBackdrop.classList.toggle('is-open', isOpen);
+      if (isOpen) {
+        drawer.querySelector('a').focus();
+      } else {
+        toggleButton.focus();
+      }
+    }
+
+    toggleButton.addEventListener('click', () => {
+      const isExpanded = toggleButton.getAttribute('aria-expanded') === 'true';
+      setDrawerState(!isExpanded);
+    });
+
+    drawerBackdrop.addEventListener('click', () => setDrawerState(false));
+
+    drawerLinks.forEach(link => {
+      link.addEventListener('click', () => setDrawerState(false));
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggleButton.getAttribute('aria-expanded') === 'true') {
+        setDrawerState(false);
+      }
+    });
+  </script>
 </body>
 </html>
